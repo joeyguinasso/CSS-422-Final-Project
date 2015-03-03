@@ -1,0 +1,45 @@
+00000400 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.15.02
+Created On: 3/2/2015 4:38:58 PM
+
+00000000                             1  *-----------------------------------------------------------
+00000000                             2  * Title      :HW5.3
+00000000                             3  * Written by :Drew Byland
+00000000                             4  * Date       :3/2/2014
+00000000                             5  * Description:
+00000000                             6  *-----------------------------------------------------------
+00000400                             7      ORG    $400
+00000400                             8  START:  
+00000400                             9  
+00000400  43F9 00000412             10      LEA     MESSAGE,A1      *Print Welcome Message
+00000406  103C 000E                 11      MOVE.B  #14,D0          
+0000040A  4E4F                      12      TRAP    #15
+0000040C                            13      
+0000040C  103C 0004                 14      MOVE.B  #4,D0           *Store starting address at D2
+00000410  4E4F                      15      TRAP    #15
+00000412                            16  *    MOVE.L  D1,INPUT
+00000412                            17      
+00000412                            18      
+00000412                            19      
+00000412                            20  
+00000412                            21  * Put variables and constants here
+00000412  =0000000D                 22  CR          EQU     $0D
+00000412  =0000000A                 23  LF          EQU     $0A
+00000412= 50 6C 65 61 73 65 ...     24  MESSAGE     DC.B    'Please enter IEEE 32-bit floating point number in hexadecimal',CR,LF,0
+00000452= 00000002                  25  INPUT       DC.L    2
+00000456                            26  
+00000456                            27  
+00000456                            28      END    START        ; last line of source
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+CR                  D
+INPUT               452
+LF                  A
+MESSAGE             412
+START               400

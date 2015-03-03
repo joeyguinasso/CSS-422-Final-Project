@@ -1,6 +1,6 @@
 00001000 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.15.02
-Created On: 3/3/2015 1:30:16 PM
+Created On: 3/3/2015 3:09:57 PM
 
 00000000                             1  *-----------------------------------------------------------
 00000000                             2  * Title      :
@@ -11,127 +11,216 @@ Created On: 3/3/2015 1:30:16 PM
 00001000                             7      ORG    $1000
 00001000                             8  START:
 00001000                             9  
-00001000                            10  *-----------------------------------------------------------
-00001000                            11  *START OF PROGRAM
-00001000                            12  *PRINT BANNER & WELCOME
-00001000                            13  *ASK USER FOR INPUT
-00001000                            14  *-----------------------------------------------------------
-00001000                            15  
-00001000  43F9 000010C0             16      LEA     BANNER,A1      *Print Welcome Message
-00001006  103C 000E                 17      MOVE.B  #14,D0          
-0000100A  4E4F                      18      TRAP    #15
-0000100C                            19      
-0000100C  43F9 00001062             20      LEA     WELCOME,A1      *Print Welcome Message
-00001012  103C 000E                 21      MOVE.B  #14,D0          
-00001016  4E4F                      22      TRAP    #15
-00001018                            23      
-00001018  43F9 00001082             24      LEA     STARTADD,A1     *Print Input Message1
-0000101E  103C 000E                 25      MOVE.B  #14,D0
-00001022  4E4F                      26      TRAP    #15
-00001024                            27      
-00001024  103C 0004                 28      MOVE.B  #4,D0           *Store starting address at D2
-00001028  4E4F                      29      TRAP    #15
-0000102A  2401                      30      MOVE.L  D1,D2
-0000102C  4EB9 0000104C             31      JSR     CHECKSTART    
-00001032                            32      
-00001032  43F9 000010A2             33      LEA     ENDADD,A1     *Print Input Message2
-00001038  103C 000E                 34      MOVE.B  #14,D0
-0000103C  4E4F                      35      TRAP    #15
-0000103E                            36      
-0000103E  103C 0004                 37      MOVE.B  #4,D0           *Store ending address at D3
-00001042  4E4F                      38      TRAP    #15
-00001044  2601                      39      MOVE.L  D1,D3
-00001046  4EB9 0000104C             40      JSR     CHECKEND
-0000104C                            41      
-0000104C                            42  *-----------------------------------------------------------
-0000104C                            43  *CHECK INPUT ADDRESSES   
-0000104C                            44  *-----------------------------------------------------------
-0000104C                            45  
-0000104C                            46  CHECKSTART
+00001000  =00009000                 10  BEGINNING   EQU $9000
+00001000  =000090A0                 11  END         EQU $90A0
+00001000  =00000400                 12  OPCODE      EQU $400
+00001000  =00000410                 13  DESTREG     EQU $410
+00001000  =00000420                 14  DESTMODE    EQU $420
+00001000  =00000430                 15  SOURCEREG   EQU $430
+00001000  =00000440                 16  SOURCEMODE  EQU $440
+00001000                            17       
+00001000                            18  *-----------------------------------------------------------
+00001000                            19  *START OF PROGRAM
+00001000                            20  *PRINT BANNER & WELCOME
+00001000                            21  *ASK USER FOR INPUT
+00001000                            22  *-----------------------------------------------------------
+00001000                            23  
+00001000                            24  
+00001000  23FC 000011C0 0000A750    25      MOVE.L  #%0001000111000000,$A750
+0000100A                            26      
+0000100A  43F9 00001190             27      LEA     BANNER,A1      *Print Welcome Message
+00001010  103C 000E                 28      MOVE.B  #14,D0          
+00001014  4E4F                      29      TRAP    #15
+00001016                            30      
+00001016  43F9 00001132             31      LEA     WELCOME,A1      *Print Welcome Message
+0000101C  103C 000E                 32      MOVE.B  #14,D0          
+00001020  4E4F                      33      TRAP    #15
+00001022                            34      
+00001022  43F9 00001152             35      LEA     STARTADD,A1     *Print Input Message1
+00001028  103C 000E                 36      MOVE.B  #14,D0
+0000102C  4E4F                      37      TRAP    #15
+0000102E                            38      
+0000102E  43F9 00009000             39      LEA     BEGINNING,A1
+00001034  103C 0002                 40      MOVE.B  #2,D0           *Store starting address at BEGINNING
+00001038  4E4F                      41      TRAP    #15
+0000103A  4EB9 0000105E             42      JSR     CHECKSTART    
+00001040                            43      
+00001040  43F9 00001172             44      LEA     ENDADD,A1     *Print Input Message2
+00001046  103C 000E                 45      MOVE.B  #14,D0
+0000104A  4E4F                      46      TRAP    #15
 0000104C                            47      
-0000104C                            48  
-0000104C                            49  CHECKEND
-0000104C                            50  
-0000104C                            51  
-0000104C                            52  
-0000104C                            53  
-0000104C                            54  
-0000104C                            55  BitMask 
-0000104C  3F05                      56      MOVE    D5,-(A7)
-0000104E  4245                      57      CLR     D5
-00001050                            58      
-00001050                            59  Loop1    
-00001050  0DC5                      60      BSET    D6,D5
-00001052  5246                      61      ADD     #1,D6
-00001054  BC47                      62      CMP     D7,D6
-00001056  6E00 0004                 63      BGT     BitMaskDone
-0000105A  60F4                      64      BRA     Loop1
-0000105C                            65      
-0000105C                            66  BitMaskDone
-0000105C  2C05                      67      MOVE.L  D5,D6
-0000105E  3A1F                      68      MOVE    (A7)+,D5
-00001060  4E75                      69      RTS     
-00001062                            70      
-00001062                            71  *BCHG/ANDI
-00001062                            72  OPC0000
-00001062                            73  
-00001062                            74  *MOVE.B
-00001062                            75  OPC0001
-00001062                            76  
-00001062                            77  *MOVE.L
-00001062                            78  OPC0010
-00001062                            79  
-00001062                            80  *MOVE.W
-00001062                            81  OPC0011
-00001062                            82  
-00001062                            83  *LEA/CLR/MOVEM/RTS/JSR
-00001062                            84  OPC0100
-00001062                            85  
-00001062                            86  *ADDQ
-00001062                            87  OPC0101
-00001062                            88  
-00001062                            89  *BCC
-00001062                            90  OPC0110
-00001062                            91  
-00001062                            92  *MOVEQ
-00001062                            93  OPC0111
-00001062                            94  
-00001062                            95  *DIVS
-00001062                            96  OPC1000
-00001062                            97  
-00001062                            98  *SUB/SUBA
-00001062                            99  OPC1001
-00001062                           100  
-00001062                           101  *EOR/CMP/CMPA
-00001062                           102  OPC1011
-00001062                           103  
-00001062                           104  *MULS/AND
-00001062                           105  OPC1100
-00001062                           106  
-00001062                           107  *ADD/ADDA
-00001062                           108  OPC1101
-00001062                           109  
-00001062                           110  *LSL/LSR/ASL/ASR/ROL/ROR
-00001062                           111  OPC1110
-00001062                           112  
-00001062                           113  
-00001062                           114  
-00001062                           115  * Put variables and constants here
-00001062                           116          
-00001062  =0000000D                117  CR          EQU     $0D
-00001062  =0000000A                118  LF          EQU     $0A
-00001062                           119  
-00001062= 57 45 4C 43 4F 4D ...    120  WELCOME     DC.B       'WELCOME TO OUR DISSASSEMBLER!',CR,LF,0
-00001082= 45 6E 74 65 72 20 ...    121  STARTADD    DC.B       'Enter Starting Input Address:',CR,LF,0
-000010A2= 45 6E 74 65 72 20 ...    122  ENDADD      DC.B       'Enter Ending Input Address:',CR,LF,0
-000010C0= 2D 2D 2D 2D 2D 2D ...    123  BANNER      DC.B       '-----------------------------------------------',CR,LF
-000010F1= 20 20 20 5F 20 20 ...    124              DC.B       '   _   _   _   _   _   _   _   _   _   _   _',CR,LF
-0000111F= 20 20 2F 20 5C 20 ...    125              DC.B       '  / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \',CR,LF
-0000114E= 20 28 20 52 20 7C ...    126              DC.B       ' ( R | A | I | N | B | O | W | F | I | S | H )',CR,LF
-0000117E= 20 20 5C 5F 2F 20 ...    127              DC.B       '  \_/ \_/ \_/ \_/ \_/ \_/ \_/ \_/ \_/ \_/ \_/',CR,LF,CR,LF
-000011AF= 2D 2D 2D 2D 2D 2D ...    128              DC.B       '-----------------------------------------------',CR,LF,0
-000011E1                           129  
-000011E1                           130      END    START        ; last line of source
+0000104C  43F9 000090A0             48      LEA     END,A1
+00001052  103C 0002                 49      MOVE.B  #2,D0           *Store ending address at END
+00001056  4E4F                      50      TRAP    #15
+00001058  4EB9 00001060             51      JSR     CHECKEND
+0000105E                            52      
+0000105E                            53  *-----------------------------------------------------------
+0000105E                            54  *CHECK INPUT ADDRESSES   
+0000105E                            55  *-----------------------------------------------------------
+0000105E                            56  
+0000105E                            57  CHECKSTART
+0000105E  4E75                      58      RTS
+00001060                            59  
+00001060                            60  CHECKEND
+00001060  4E75                      61      RTS
+00001062                            62  
+00001062                            63  *-----------------------------------------------------------
+00001062                            64  *GET OPCODE   
+00001062                            65  *-----------------------------------------------------------
+00001062                            66      
+00001062  2279 00009000             67      MOVE.L  BEGINNING,A1
+00001068  2219                      68      MOVE.L  (A1)+,D1
+0000106A  2401                      69      MOVE.L  D1,D2
+0000106C  0402 0030                 70      SUBI.B  #48,D2
+00001070  4EB9 0000107C             71      JSR     MASKFIRST4
+00001076  4EB9 00001096             72      JSR     OPCODECOMPARE
+0000107C                            73        
+0000107C                            74  MASKFIRST4  
+0000107C  C47C F000                 75      AND.W   #%1111000000000000,D2
+00001080  E95A                      76      ROL.W   #4,D2
+00001082  4E75                      77      RTS     
+00001084                            78  
+00001084                            79  MASKGETDESTREG
+00001084  C47C 0E00                 80      AND.W   #%0000111000000000,D2
+00001088  E05A                      81      ROR.W   #8,D2
+0000108A  E25A                      82      ROR.W   #1,D2
+0000108C  4E75                      83      RTS
+0000108E                            84      
+0000108E                            85  MASKGETDESTMODE
+0000108E  C47C 01C0                 86      AND.W   #%0000000111000000,D2
+00001092  EC5A                      87      ROR.W   #6,D2
+00001094  4E75                      88      RTS
+00001096                            89  
+00001096                            90  OPCODECOMPARE
+00001096  B43C 0000                 91      CMP.B   #%0000,D2
+0000109A  6700 0076                 92      BEQ     OPC0000
+0000109E  B43C 0001                 93      CMP.B   #%0001,D2
+000010A2  6700 006E                 94      BEQ     OPC0001
+000010A6  B43C 0002                 95      CMP.B   #%0010,D2
+000010AA  6700 0086                 96      BEQ     OPC0010
+000010AE  B43C 0003                 97      CMP.B   #%0011,D2
+000010B2  6700 007E                 98      BEQ     OPC0011
+000010B6  B43C 0004                 99      CMP.B   #%0100,D2
+000010BA  6700 0076                100      BEQ     OPC0100
+000010BE  B43C 0005                101      CMP.B   #%0101,D2
+000010C2  6700 006E                102      BEQ     OPC0101
+000010C6  B43C 0006                103      CMP.B   #%0110,D2
+000010CA  6700 0066                104      BEQ     OPC0110
+000010CE  B43C 0007                105      CMP.B   #%0111,D2
+000010D2  6700 005E                106      BEQ     OPC0111
+000010D6  B43C 0008                107      CMP.B   #%1000,D2
+000010DA  6700 0056                108      BEQ     OPC1000
+000010DE  B43C 0009                109      CMP.B   #%1001,D2
+000010E2  6700 004E                110      BEQ     OPC1001
+000010E6  B43C 000B                111      CMP.B   #%1011,D2
+000010EA  6700 0046                112      BEQ     OPC1011
+000010EE  B43C 000C                113      CMP.B   #%1100,D2
+000010F2  6700 003E                114      BEQ     OPC1100
+000010F6  B43C 000D                115      CMP.B   #%1101,D2
+000010FA  6700 0036                116      BEQ     OPC1101
+000010FE  B43C 000E                117      CMP.B   #%1110,D2
+00001102  6700 002E                118      BEQ     OPC1110
+00001106  B43C 0000                119      CMP.B   #%0000,D2
+0000110A  6700 0006                120      BEQ     OPC0000
+0000110E                           121      
+0000110E                           122  DESTCOMPARE
+0000110E                           123      
+0000110E  B83C 0000                124      CMP.B   #%000,D4
+00001112                           125      
+00001112                           126      
+00001112                           127      
+00001112                           128      
+00001112                           129  *BCHG/ANDI
+00001112                           130  OPC0000
+00001112                           131  
+00001112                           132  *MOVE.B
+00001112                           133  OPC0001
+00001112                           134      
+00001112  43F9 000012B1            135      LEA     MOVEMSG,A1
+00001118  103C 000E                136      MOVE.B  #14,D0
+0000111C  4E4F                     137      TRAP    #15
+0000111E                           138      
+0000111E  45F8 0400                139      LEA     OPCODE,A2
+00001122  1482                     140      MOVE.B  D2,(A2)
+00001124  4EB8 1084                141      JSR     MASKGETDESTREG      *RETRIEVE DESTINATION REGISTER
+00001128  3602                     142      MOVE.W  D2,D3               *STORE IN D3
+0000112A  3401                     143      MOVE.W  D1,D2
+0000112C  4EB8 108E                144      JSR     MASKGETDESTMODE     *RETREIVE DESTINATION MODE
+00001130  3802                     145      MOVE.W  D2,D4
+00001132                           146      
+00001132                           147  
+00001132                           148  *MOVE.L
+00001132                           149  OPC0010
+00001132                           150  
+00001132                           151  *MOVE.W
+00001132                           152  OPC0011
+00001132                           153  
+00001132                           154  *LEA/CLR/MOVEM/RTS/JSR
+00001132                           155  OPC0100
+00001132                           156  
+00001132                           157  *ADDQ
+00001132                           158  OPC0101
+00001132                           159  
+00001132                           160  *BCC
+00001132                           161  OPC0110
+00001132                           162  
+00001132                           163  *MOVEQ
+00001132                           164  OPC0111
+00001132                           165  
+00001132                           166  *DIVS
+00001132                           167  OPC1000
+00001132                           168  
+00001132                           169  *SUB/SUBA
+00001132                           170  OPC1001
+00001132                           171  
+00001132                           172  *EOR/CMP/CMPA
+00001132                           173  OPC1011
+00001132                           174  
+00001132                           175  *MULS/AND
+00001132                           176  OPC1100
+00001132                           177  
+00001132                           178  *ADD/ADDA
+00001132                           179  OPC1101
+00001132                           180  
+00001132                           181  *LSL/LSR/ASL/ASR/ROL/ROR
+00001132                           182  OPC1110
+00001132                           183  
+00001132                           184  
+00001132                           185  
+00001132                           186  * Put variables and constants here
+00001132                           187          
+00001132  =0000000D                188  CR          EQU     $0D
+00001132  =0000000A                189  LF          EQU     $0A
+00001132                           190  
+00001132= 57 45 4C 43 4F 4D ...    191  WELCOME     DC.B       'WELCOME TO OUR DISSASSEMBLER!',CR,LF,0
+00001152= 45 6E 74 65 72 20 ...    192  STARTADD    DC.B       'Enter Starting Input Address:',CR,LF,0
+00001172= 45 6E 74 65 72 20 ...    193  ENDADD      DC.B       'Enter Ending Input Address:',CR,LF,0
+00001190= 2D 2D 2D 2D 2D 2D ...    194  BANNER      DC.B       '-----------------------------------------------',CR,LF
+000011C1= 20 20 20 5F 20 20 ...    195              DC.B       '   _   _   _   _   _   _   _   _   _   _   _',CR,LF
+000011EF= 20 20 2F 20 5C 20 ...    196              DC.B       '  / \ / \ / \ / \ / \ / \ / \ / \ / \ / \ / \',CR,LF
+0000121E= 20 28 20 52 20 7C ...    197              DC.B       ' ( R | A | I | N | B | O | W | F | I | S | H )',CR,LF
+0000124E= 20 20 5C 5F 2F 20 ...    198              DC.B       '  \_/ \_/ \_/ \_/ \_/ \_/ \_/ \_/ \_/ \_/ \_/',CR,LF,CR,LF
+0000127F= 2D 2D 2D 2D 2D 2D ...    199              DC.B       '-----------------------------------------------',CR,LF,0
+000012B1= 4D 4F 56 45 2E 42 00     200  MOVEMSG     DC.B       'MOVE.B',0
+000012B8                           201              
+000012B8                           202  *BitMask 
+000012B8                           203   *   MOVE    D5,-(A7)
+000012B8                           204    *  CLR     D5
+000012B8                           205      
+000012B8                           206  *Loop1    
+000012B8                           207   *   BSET    D6,D5
+000012B8                           208    *  ADD     #1,D6
+000012B8                           209     * CMP     D7,D6
+000012B8                           210      *BGT     BitMaskDone
+000012B8                           211      *BRA     Loop1
+000012B8                           212      
+000012B8                           213  *BitMaskDone
+000012B8                           214   *   MOVE.L  D5,D6
+000012B8                           215    *  MOVE    (A7)+,D5
+000012B8                           216     * RTS     
+000012B8                           217  
+000012B8                           218  
+000012B8                           219      END    START        ; last line of source
 
 No errors detected
 No warnings generated
@@ -140,29 +229,39 @@ No warnings generated
 SYMBOL TABLE INFORMATION
 Symbol-name         Value
 -------------------------
-BANNER              10C0
-BITMASK             104C
-BITMASKDONE         105C
-CHECKEND            104C
-CHECKSTART          104C
+BANNER              1190
+BEGINNING           9000
+CHECKEND            1060
+CHECKSTART          105E
 CR                  D
-ENDADD              10A2
+DESTCOMPARE         110E
+DESTMODE            420
+DESTREG             410
+END                 90A0
+ENDADD              1172
 LF                  A
-LOOP1               1050
-OPC0000             1062
-OPC0001             1062
-OPC0010             1062
-OPC0011             1062
-OPC0100             1062
-OPC0101             1062
-OPC0110             1062
-OPC0111             1062
-OPC1000             1062
-OPC1001             1062
-OPC1011             1062
-OPC1100             1062
-OPC1101             1062
-OPC1110             1062
+MASKFIRST4          107C
+MASKGETDESTMODE     108E
+MASKGETDESTREG      1084
+MOVEMSG             12B1
+OPC0000             1112
+OPC0001             1112
+OPC0010             1132
+OPC0011             1132
+OPC0100             1132
+OPC0101             1132
+OPC0110             1132
+OPC0111             1132
+OPC1000             1132
+OPC1001             1132
+OPC1011             1132
+OPC1100             1132
+OPC1101             1132
+OPC1110             1132
+OPCODE              400
+OPCODECOMPARE       1096
+SOURCEMODE          440
+SOURCEREG           430
 START               1000
-STARTADD            1082
-WELCOME             1062
+STARTADD            1152
+WELCOME             1132
